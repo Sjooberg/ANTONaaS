@@ -17,4 +17,4 @@ runcmd:
  - sudo apt-get --yes --force-yes install rabbitmq-server
  - sudo apt --yes --force-yes install python-celery-common
  - sudo pip install celery
- - sudo git clone https://github.com/Sjooberg/ANTONaaS/tree/master/lab3 /home/ubuntu/lab3
+ - sudo git clone https://github.com/Sjooberg/ANTONaaS /home/ubuntu/lab3

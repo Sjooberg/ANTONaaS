@@ -7,8 +7,10 @@ try:
 except ImportError:
 	import simplejson as json
 
+	
 # Containers name to retreive documents from (do not forget to source g.. first)
 container_name = 'tweets'
+
 
 # Setup connection to swift client containers
 config = {'user':os.environ['OS_USERNAME'],
@@ -17,19 +19,23 @@ config = {'user':os.environ['OS_USERNAME'],
           'authurl':os.environ['OS_AUTH_URL']}
 conn = swiftclient.Connection(auth_version=3, **config)          
 
+
 # Create flask app
 app = Flask(__name__)
 app.config['CELERY_BROKER_URL']='amqp://guest@localhost//'
 app.config['CELERY_BACKEND']='rpc://'
 
+
 # Create cellery worker
 celery = make_celery(app)
+
 
 # Method done by the flask app
 @app.route('/process')
 def process():
 	tweetRetrieveAndCount.delay()
 	return "End flask route"
+
 
 # Task that is beeing done by the celery workers
 @celery.task(name= 'celery_ex.tweetRetrieveAndCount')
@@ -53,7 +59,7 @@ def tweetRetrieveAndCount():
 					if(pronomen[i] in tweet['text'] and ('RT' not in tweet['text'])):
 					pronomenCounter[i] += 1	
 					count += 1
-# get result : ) ? returna nåt kanskeke		
+	
 	return "End celery tweetRetrieve"
 
 if __name__ == '__main__':

@@ -1,14 +1,18 @@
-from flask import Flask
+from flask import Flask, render_template
 from tasks import make_celery
 import os
+import sys
 import swiftclient
+from collections import Counter
 try:
 	import json
 except ImportError:
 	import simplejson as json
 
+
 	
 # Containers name to retreive documents from (do not forget to source g.. first)
+
 container_name = 'tweets'
 
 
@@ -31,8 +35,8 @@ celery = make_celery(app)
 
 
 # Method done by the flask app
-@app.route('/process')
-def process():
+@app.route('/twitterCount',methods=["GET"])
+def twitterCount():
 	tweetRetrieveAndCount.delay()
 	return "End flask route"
 
@@ -40,8 +44,7 @@ def process():
 # Task that is beeing done by the celery workers
 @celery.task(name= 'celery_ex.tweetRetrieveAndCount')
 def tweetRetrieveAndCount():	
-	pronomen = ['han': 0, 'hon': 0 , 'hen': 0, 'den': 0, 'det': 0, 'denna': 0, 'denne': 0]
-	pronomenCounter = [0]*len(pronomen)
+	pronomen = {'han': 0, 'hon': 0 , 'hen': 0, 'den': 0, 'det': 0, 'denna': 0, 'denne': 0}
 	for data in conn.get_container(container_name)[1]:
 		obj_tuple = conn.get_object(container_name, data['name'])	
 		currentLine = 0
@@ -66,4 +69,4 @@ def tweetRetrieveAndCount():
 	return "End celery tweetRetrieve"
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(host = "0.0.0.0", debug=True)

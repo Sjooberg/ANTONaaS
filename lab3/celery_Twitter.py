@@ -68,7 +68,7 @@ def graph():#
 
 
 # Task that is beeing done by the celery workers
-@celery.task(name= 'celery_ex.tweetCount')
+@celery.task(name= 'celery_Twitter.tweetCount')
 def tweetCount():	
 	pronoun = {'han': 0, 'hon': 0 , 'hen': 0, 'den': 0, 'det': 0, 'denna': 0, 'denne': 0}
 	for data in conn.get_container(container_name)[1]:

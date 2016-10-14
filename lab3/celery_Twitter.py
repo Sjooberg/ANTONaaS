@@ -40,7 +40,7 @@ celery = make_celery(app)
 # Method done by the flask app
 @app.route('/twitterCount',methods=["GET"])
 def twitterCount():
-	tweetRetrieveAndCount.delay()
+	tweetCount.delay()
 	return "End flask route"
 
 #Create the Graph
